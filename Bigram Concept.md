@@ -1,0 +1,2 @@
+BIgram Model:
+     So what I learned about this model is that bi means 2 so it reads a character that is the current one after which we have to predict new one like if words is 'th' it will read h and then the next character it will predict itself so it has the current and new character.
