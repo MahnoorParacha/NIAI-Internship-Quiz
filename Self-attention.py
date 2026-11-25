@@ -14,7 +14,7 @@ class Head(nn.Module):
         self.query = nn.Linear(n_emd, head_size, bias=False)   # it makes the query which tells us what is it looking for
         self.value = nn.Linear(n_emd, head_size, bias=False)   # it makes the value that tells us what it will give us
 
-        self.register_buffer('tril', torch.tril(torch.ones(block_size, block_size)))  # tril is a triangular matrix of 1s and 0s, and it has 65*65 dimention
+        self.register_buffer('tril', torch.tril(torch.ones(block_size, block_size)))  # tril is a triangular matrix of 1s and 0s, and it has 32*32 dimention
                                                          
 
         self.dropout = nn.Dropout(dropout)               # gives 0 to some weights in training randomly
@@ -25,12 +25,12 @@ class Head(nn.Module):
         q = self.query(x)                                # queries for every character
         
         wei = q @ k.transpose(-2,-1) * C**-0.5           # match each query with each key, then scale
-                                                         # (B, T, head_size) @ (B, head_size, T) -> (B, T, T)
+                                                         
                
-        wei = F.softmax(wei, dim=-1)                     # turn each row of weights into percentages
+        wei = F.softmax(wei, dim=-1)                     # I turned each row of weights into percentages
         wei = self.dropout(wei)                          # dropout on the attention percentages
         
         v = self.value(x)                                # values for every character
         out = wei @ v                                    # take percentages
-                                                         # (B, T, T) @ (B, T, head_size) -> (B, T, head_size)
+                                                         
         return out                                       # return result
